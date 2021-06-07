@@ -112,57 +112,5 @@ contract PTMMarashals {
         }
     }
 
-    function getRandomMarshals() public view returns (address[] memory) {
-        uint256 a =
-            uint256(
-                keccak256(
-                    abi.encodePacked(block.timestamp, msg.sender, randNonce)
-                )
-            ) % total_marshal;
-        uint256 b =
-            uint256(
-                keccak256(
-                    abi.encodePacked(block.timestamp, msg.sender, randNonce * 2)
-                )
-            ) % total_marshal;
-
-        uint256 c =
-            uint256(
-                keccak256(
-                    abi.encodePacked(block.timestamp, msg.sender, randNonce * 3)
-                )
-            ) % total_marshal;
-
-        uint256 d =
-            uint256(
-                keccak256(
-                    abi.encodePacked(block.timestamp, msg.sender, randNonce * 4)
-                )
-            ) % total_marshal;
-
-        uint256 e =
-            uint256(
-                keccak256(
-                    abi.encodePacked(block.timestamp, msg.sender, randNonce * 5)
-                )
-            ) % total_marshal;
-
-        address[] memory selected_marshals = new address[](5);
-        address[] memory marshals_list = new address[](total_marshal);
-
-        uint256 z = 0;
-        for (uint256 i = start; i < end; i++) {
-            marshals_list[z] = marshals[i].adr;
-            i = marshals[i].next;
-            z++;
-        }
-
-        selected_marshals[0] = marshals_list[a];
-        selected_marshals[1] = marshals_list[b];
-        selected_marshals[2] = marshals_list[c];
-        selected_marshals[3] = marshals_list[d];
-        selected_marshals[4] = marshals_list[e];
-
-        return selected_marshals;
-    }
+    
 }

@@ -61,6 +61,10 @@ contract PTMOffers {
             end - 1
         );
 
+        if(end - 1 != 0){
+            gigs[end - 1].next = end;
+        }
+
         PTMCategories cat = PTMCategories(category_contract);
 
         cat.addNewUserGig(msg.sender, address(this), end);
@@ -111,6 +115,7 @@ contract PTMOffers {
     }
 
     function deleteGig(uint256 id) public {
+
         if (gigs[id].next <= end) {
             gigs[gigs[id].next].prev = gigs[id].prev;
         }
@@ -139,7 +144,10 @@ contract PTMOffers {
         PTMCategories cat = PTMCategories(category_contract);
 
         cat.addNewClientOrder(msg.sender, address(order));
-        cat.addNewServiceProviderOrder(msg.sender, address(order));
+        cat.addNewServiceProviderOrder(
+            selected_gig.service_provider,
+            address(order)
+        );
 
         // USDT.transferFrom(
         //     msg.sender,

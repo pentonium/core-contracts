@@ -38,8 +38,8 @@ interface PTMConfig {
     function config(string memory _key) external view returns (address);
 }
 
-interface PTMMarashals {
-    function getRandomMarshals() external returns (address[] memory);
+interface Dispute {
+    function addNewDispute() external returns ();
 }
 
 contract PTMOrderEscrow {
@@ -202,15 +202,19 @@ contract PTMOrderEscrow {
 
         PTMConfig config =
             PTMConfig(0x01fCAE732E224B4199de657aF7FC0fD3fe9835e5);
-        address marshal = config.config("MARSHAL");
+        address dispute = config.config("DISPUTE");
 
-        PTMMarashals marshalContract = PTMMarashals(marshal);
-
-        marshals_list = marshalContract.getRandomMarshals();
+        Dispute disputeContract = Dispute(dispute);
+        disputeContract.addNewDispute();
     }
 
     function vote(address user) public {
+        PTMConfig config =
+            PTMConfig(0x01fCAE732E224B4199de657aF7FC0fD3fe9835e5);
+        address dispute = config.config("DISPUTE");
+
         require(order_status == 207, "Order must be in dispute state");
+        require(msg.sender == dispute, "Should be from dispute contract");
 
         if (user == service_provider || user == client) {
             dispute_vote[user] = dispute_vote[user] + 1;
