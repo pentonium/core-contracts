@@ -65,6 +65,8 @@ contract Category {
         }
 
         // Add Category to users contract
+
+        factory_contact.EventForJobStatus(msg.sender, address(this), end, 200);
     }
 
 
@@ -96,11 +98,13 @@ contract Category {
         // update job, should only be done by service provider
         require(msg.sender == jobs[id].service_provider);
         jobs[id] = JobStruct(ipfs_hash, thumbnail, jobs[id].service_provider, price, duration, id, jobs[id].next, jobs[id].prev);
+
+        factory_contact.EventForJobStatus(msg.sender, address(this), id, 201);
     }
 
 
     /* Delete job posted by service provider */
-    function deleteGig(uint256 id) public {
+    function deleteJob(uint256 id) public {
         // update job, should only be done by service provider
         // Check logic of delte one more time
         require(msg.sender == jobs[id].service_provider);
@@ -120,6 +124,8 @@ contract Category {
         }
 
         delete jobs[id];
+
+        factory_contact.EventForJobStatus(msg.sender, address(this), id, 202);
     }
 
     
@@ -145,6 +151,8 @@ contract Category {
         total_private_jobs++;
 
         private_jobs[total_private_jobs] = PrivateJobStruct(ipfs_hash, thumbnail, msg.sender, client, token, price, duration, end, end + 1, end - 1);
+
+        factory_contact.EventForJobStatus(msg.sender, address(this), total_private_jobs, 203);
     }
 
 

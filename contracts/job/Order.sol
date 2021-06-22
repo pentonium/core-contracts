@@ -40,6 +40,7 @@ contract Order {
     // 206 - dispute - proceeded by other party
 
     IConfig config_contract;
+    IFactory factory_contact;
 
     function constructor( address _service_provider, address _client, string memory _client_public, string memory _client_private,
      string memory _ipfs_hash, uint256 _price, uint256 _duration, address _config_contract
@@ -60,6 +61,8 @@ contract Order {
         IConfig config_contract = IConfig(_config_contract);
 
         order_status = 200;
+
+        factory_contact.EventForOrderStatus(client, service_provider, address(this), 200);
     }
 
     /** Order can be canceld after a day of no response */
@@ -72,6 +75,8 @@ contract Order {
         IERC20(token).transfer(client, IERC20(token).balanceOf(address(this)));
 
         order_status = 203;
+
+        factory_contact.EventForOrderStatus(client, service_provider, address(this), 203);
     }
 
     /** Service provider can accept the order */
@@ -82,6 +87,8 @@ contract Order {
         order_status = 201;
         service_provider_public = _service_provider_public;
         service_provider_private = _service_provider_private;
+
+        factory_contact.EventForOrderStatus(client, service_provider, address(this), 201);
     }
 
     /** Service provider can reject the order */
@@ -93,6 +100,8 @@ contract Order {
 
         address token = config_contract.getConfigAddress("PAYMENT_TOKEN");
         IERC20(token).transfer(client, IERC20(token).balanceOf(address(this)));
+
+        factory_contact.EventForOrderStatus(client, service_provider, address(this), 202);
     }
 
     /** Submit a deliver, requires ipfs hash of the chat */
@@ -102,6 +111,8 @@ contract Order {
         order_status = 204;
 
         ipfs_hash_list.push(_ipfs_hash);
+
+        factory_contact.EventForOrderStatus(client, service_provider, address(this), 204);
     }
 
     /** Accept the delivery and transfer the fund */
@@ -114,6 +125,8 @@ contract Order {
 
         address token = config_contract.getConfigAddress("PAYMENT_TOKEN");
         IERC20(token).transfer(service_provider, IERC20(token).balanceOf(address(this)));
+
+        factory_contact.EventForOrderStatus(client, service_provider, address(this), 205);
     }
 
 
@@ -142,6 +155,8 @@ contract Order {
 
         dispute_fee[msg.sender] = true;
         dispute_timer = block.timestamp;
+
+        factory_contact.EventForOrderStatus(client, service_provider, address(this), 206);
     }
 
 
@@ -160,6 +175,8 @@ contract Order {
 
         Dispute disputeContract = Dispute(disputeContractAddress);
         disputeContract.addNewDispute();
+
+        factory_contact.EventForOrderStatus(client, service_provider, address(this), 207);
     }
 
 

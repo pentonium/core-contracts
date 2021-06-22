@@ -1,8 +1,9 @@
 pragma solidity >=0.7.0 <0.8.0;
 pragma experimental ABIEncoderV2;
 import "./job/Category.sol";
+import "./lib/Events.sol";
 
-contract Factory{
+contract Factory is Events{
 
     struct CategoryStruct {
         string category_name;
